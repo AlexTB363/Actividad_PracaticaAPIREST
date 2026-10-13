@@ -33,6 +33,9 @@ app.post("/api/login", usuariosController.login);
 // Archivos del frontend
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-app.listen(PORT, () => {
-    console.log(`Servidor disponible en http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Servidor disponible en http://localhost:${PORT}`);
+    });
+}
+module.exports = app;

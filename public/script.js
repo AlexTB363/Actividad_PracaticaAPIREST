@@ -1,15 +1,27 @@
 let paises = [];
 
-function iniciarSesion(evento) {
+async function iniciarSesion(evento) {
     evento.preventDefault();
-    const usuario = document.getElementById("username").value;
+    const email = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    if (usuario === "alumno" && password === "1234") {
+    const errorLogin = document.getElementById("error-login");
+    errorLogin.textContent = "";
+    try {
+        const respuesta = await fetch("/api/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
+        const datos = await respuesta.json();
+        if (!respuesta.ok) {
+            errorLogin.textContent = datos.mensaje || "No se pudo iniciar sesión.";
+            return;
+        }
         sessionStorage.setItem("sesion", "activa");
         window.location.href = "inicio.html";
-    } else {
-        document.getElementById("error-login").textContent = "Usuario o contraseña incorrectos.";
+    } catch {
+        errorLogin.textContent = "No se pudo conectar con el servidor.";
     }
 }
 
